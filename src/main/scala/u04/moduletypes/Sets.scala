@@ -1,6 +1,6 @@
 package u04.moduletypes
 
-import u03.extensionmethods.Sequences.*
+import u03.Sequences.*
 import Sequence.*
 
 object Sets:
@@ -34,7 +34,7 @@ object Sets:
       case Nil() => Nil()
     
     extension [A](s: Set[A]) 
-      def remove(a: A): Set[A] = s.filter(_ != a)  
+      def remove(a: A): Set[A] = filter(s)(_ != a)
       def contains(a: A): Boolean = s match
         case Cons(h, t) if h == a => true
         case Cons(_, t) => t.contains(a)
