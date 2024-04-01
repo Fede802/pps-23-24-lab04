@@ -1,19 +1,18 @@
 package tasks.monads
 
 import u04.monads.Monads.Monad
-import u04.monads.Monads.Monad
-import u02.Values.u
+
 
 /**
-  * Exercise 6: 
-    This module contains the implementation of a Try monad, which is a monad that 
-    represents a computation that may fail. 
-    Try to follow these steps:
-    - Look at the implementation of Try, that is similar to the one of Optional
-    - Try go define the Monad instance for Try
-      - flatMap should consider only the Success case
-      - in case of Failure, it should return the exception (fail fast)
-    - Verify that the main works as expected
+ * Exercise 6:
+    *This module contains the implementation of a Try monad, which is a monad that
+    *represents a computation that may fail.
+    *Try to follow these steps:
+    *- Look at the implementation of Try, that is similar to the one of Optional
+    *- Try go define the Monad instance for Try
+      *- flatMap should consider only the Success case
+      *- in case of Failure, it should return the exception (fail fast)
+    *- Verify that the main works as expected
   */
 object Ex6TryModel:
   private enum TryImpl[A]:
@@ -24,7 +23,10 @@ object Ex6TryModel:
 
   def success[A](value: A): Try[A] = TryImpl.Success(value)
   def failure[A](exception: Throwable): Try[A] = TryImpl.Failure(exception)
-  def exec[A](expression: => A): Try[A] = try success(expression) catch failure(_)
+  def exec[A](expression: => A): Try[A] = try
+    success(expression)
+  catch
+    case e: Throwable => failure(e)
 
   extension [A](m: Try[A]) 
     def getOrElse[B >: A](other: B): B = m match
@@ -39,7 +41,7 @@ object Ex6TryModel:
           case TryImpl.Success(v) => f(v)
           case TryImpl.Failure(exception) => failure(exception)
       
-@main def main: Unit = 
+@main def main(): Unit =
   import Ex6TryModel.*
 
   val result = for 
@@ -54,7 +56,6 @@ object Ex6TryModel:
     b <- failure(new RuntimeException("error"))
     c <- success(30)
   yield a + c
-
   println(success(20).map(_ + 10).getOrElse(-1))
   assert(success(20).map(_ + 10).getOrElse(-1) == 30)
   println(result2.getOrElse(-1))
