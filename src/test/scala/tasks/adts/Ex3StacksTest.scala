@@ -10,7 +10,7 @@ import u03.Optionals.Optional
    specific implementation
 */
 
-class Stacktest:
+class Ex3StacksTest:
 
 
   val stack = StackImpl

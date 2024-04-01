@@ -1,4 +1,5 @@
 package tasks.adts
+import tasks.adts.Ex2SchoolModel.SchoolModuleImpl.{Course, School, Teacher}
 import u03.Sequences.*
 import u03.Optionals.*
 import u04.moduletypes.Sets.*
@@ -21,8 +22,6 @@ object Ex2SchoolModel:
     type Teacher
     type School
 
-    def createCourse(n: String): Course
-    def createTeacher(n: String): Teacher
     def createEmptySchool(): School
     extension (school: School)
       def addTeacher(name: String): School
@@ -46,21 +45,20 @@ object Ex2SchoolModel:
     opaque type Teacher = TeacherImpl
     opaque type Course = CourseImpl
 
-    def createCourse(n: String): Course = CourseImpl(n)
-    def createTeacher(n: String): Teacher = TeacherImpl(n, Sequence.Nil())
     def createEmptySchool(): School = SchoolImpl(Sequence.Nil(), Sequence.Nil())
     import BasicSetADT.*
     extension (school: School)
+      def addTeacher(name: String): School =
+        require(Optional.isEmpty(teacherByName(name)))
+        school match
+          case SchoolImpl(t, c) =>
+            SchoolImpl(Sequence.Cons(TeacherImpl(name, Sequence.Nil()), t), c)
 
-      def addTeacher(name: String): School = school match
-        case SchoolImpl(t, c) =>
-          SchoolImpl(Sequence.Cons(createTeacher(name), t), c)
-
-      def addCourse(name: String): School = school match
-        case SchoolImpl(t, c) =>
-          if Optional.isEmpty(courseByName(name)) then
-            SchoolImpl(t, Sequence.Cons(createCourse(name), c))
-          else school
+      def addCourse(name: String): School =
+        require(Optional.isEmpty(courseByName(name)))
+        school match
+          case SchoolImpl(t, c) =>
+            SchoolImpl(t, Sequence.Cons(CourseImpl(name), c))
 
       def teacherByName(name: String): Optional[Teacher] =
         Sequence.filter(school.t)(_.n == name) match
@@ -76,6 +74,24 @@ object Ex2SchoolModel:
 
       def nameOfCourse(course: Course): String = course.n
 
-      def setTeacherToCourse(teacher: Teacher, course: Course): School = ???
+      def setTeacherToCourse(teacher: Teacher, course: Course): School =
+        require(
+          !Optional.isEmpty(teacherByName(teacher.n)) && !Optional.isEmpty(
+            courseByName(course.n)
+          ) && Optional.isEmpty(
+            Sequence.filter(coursesOfATeacher(teacher))(_.n == course.n) match
+              case Sequence.Nil() => Optional.Empty()
+              case _              => Optional.Just(course.n)
+          )
+        )
+        SchoolImpl(
+          Sequence.map(school.t)(t =>
+            if t == teacher then TeacherImpl(t.n, Sequence.Cons(course, t.c))
+            else t
+          ),
+          school.c
+        )
 
-      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = ???
+      def coursesOfATeacher(teacher: Teacher): Sequence[Course] =
+        require(!Optional.isEmpty(teacherByName(teacher.n)))
+        teacher.c;
