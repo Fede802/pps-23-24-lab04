@@ -15,6 +15,8 @@ package u04.monads
     _ <- addButton(text = "inc", name = "IncButton")
     _ <- addButton(text = "dec", name = "DecButton")
     _ <- addButton(text = "reset", name = "ResetButton")
+    _ <- addTextField(text = "", name = "CounterField")
+    _ <- addButton(text = "set", name = "SetButton")
     _ <- addButton(text = "quit", name = "QuitButton")
     _ <- addLabel(text = str, name = "Label1")
     _ <- show()
@@ -27,6 +29,14 @@ package u04.monads
         case "IncButton" => mv(seq(inc(), get()), i => toLabel(i.toString, "Label1"))
         case "DecButton" => mv(seq(dec(), get()), i => toLabel(i.toString, "Label1"))
         case "ResetButton" => mv(seq(reset(), get()), i => toLabel(i.toString, "Label1"))
+        case "SetButton" =>
+          for
+            text <- mv(nop(), i => textFromField("CounterField"))
+            _ <-
+              if text.toIntOption.isDefined
+                then mv(seq(set(text.toInt), get()), i => toLabel(i.toString, "Label1"))
+                else mv(get(), i => toLabel(i.toString, "Label1"))
+          yield ()
         case "QuitButton" => mv(nop(), _ => exec(sys.exit()))))
   yield ()
 
