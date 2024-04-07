@@ -17,7 +17,8 @@ import u04.monads.Monads.Monad.{seq, seqN}
   def windowCreation(str: String): State[Window, Stream[String]] = for
     _ <- setSize(250, 250)
     _ <- addLabel(text = str, name = "Label1")
-    _ <- addTextField(text = "", name = "GuessField")
+    //number to guess is fixed and hardcoded as hint in text field for debug purpose
+    _ <- addTextField(text = "300", name = "GuessField")
     _ <- addButton(text = "guess", name = "GuessButton")
     _ <- addButton(text = "reset", name = "ResetButton")
     _ <- addButton(text = "quit", name = "QuitButton")
@@ -39,7 +40,7 @@ import u04.monads.Monads.Monad.{seq, seqN}
             then seq(disable("GuessButton"), disable("GuessField"))
             else exec(())
           )
-        yield()
+        yield ()
       case "ResetButton" => mv(seq(reset(), hint()), h => seq(resetWindow(),toLabel(h, "Label1")))
       case "QuitButton" => mv(nop(), _ => exec(sys.exit()))))
   yield ()

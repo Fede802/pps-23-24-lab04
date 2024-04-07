@@ -38,8 +38,8 @@ package u04.monads
           for
             text <- mv(nop(), i => textFromField("CounterField"))
             _ <- if text.toIntOption.isDefined
-                    then mv(seq(set(text.toInt), get()), i => toLabel(i.toString, "Label1"))
-                    else mv(get(), i => toLabel(i.toString, "Label1"))
+              then mv(seq(set(text.toInt), get()), i => toLabel(i.toString, "Label1"))
+              else mv(get(), i => toLabel(i.toString, "Label1"))
           yield ()
         case "QuitButton" => mv(nop(), _ => exec(sys.exit()))))
   yield ()

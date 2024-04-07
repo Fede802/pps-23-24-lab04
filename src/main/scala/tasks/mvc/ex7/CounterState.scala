@@ -15,44 +15,10 @@ trait CounterState:
 
 object CounterStateImpl extends CounterState:
   opaque type Counter = Int
-  
   def initialCounter(): Counter = 0
-
-  // giving (new_counter, result)
   def inc(): State[Counter, Unit] = State(i => (i + 1, ()));
   def dec(): State[Counter, Unit] = State(i => (i - 1, ()));
   def reset(): State[Counter, Unit] = State(i => (0, ()));
   def get(): State[Counter, Int] = State(i => (i, i));
   def set(n: Int): State[Counter, Unit] = State(i => (n, ()));
   def nop(): State[Counter, Unit] = State(i => (i, ()));
-
-@main def tryCounterState =
-  import State.*
-  val counterState: CounterState = CounterStateImpl
-  import counterState.*  // or directly, import CounterStateImpl.*
-
-  println:
-    inc().run(initialCounter()) // ((),  1)
-  println:
-    seq(inc(), inc()).run(initialCounter()) // ((), 2)
-
-  def increment(n: Int): State[Counter, Unit] =
-    if (n == 0)
-    then nop()
-    else
-      for
-        _ <- increment(n - 1)
-        _ <- inc()
-      yield ()  
-
-  val session: State[Counter, Int] =
-    for 
-      _ <- inc()
-      _ <- reset()
-      _ <- increment(5)
-      v <- get()
-      _ <- reset()
-    yield v
-
-  println:
-    session.run(initialCounter())  // (5, 0)  
