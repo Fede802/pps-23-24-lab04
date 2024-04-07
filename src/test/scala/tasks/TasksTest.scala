@@ -2,9 +2,8 @@ package tasks
 
 import org.junit.*
 import org.junit.Assert.*
-import u03.Sequences.Sequence
 import u03.Optionals.Optional
-
+import u03.Sequences.Sequence
 
 object TasksTest {
 
@@ -14,7 +13,6 @@ object TasksTest {
     val complexADT: ComplexADT = BasicComplexADT
 
     import complexADT.*
-
     // From now, everything is independent of specific implementation of Complex
 
     @Test def testReal(): Unit =
@@ -249,4 +247,5 @@ object TasksTest {
         b <- exec(new RuntimeException("error"))
         c <- exec(30)
       yield a + c
+
 }
