@@ -43,23 +43,23 @@ object Ex5Traversable:
 
   def log[A](a: A): Unit = println("The next element is: "+a)
 
-  trait Traversable2[T[_]]:
+  trait Traversable[T[_]]:
     def logAll[A](t: T[A]): Unit
 
 
-  given Traversable2[Optional] with {
+  given Traversable[Optional] with {
     def logAll[A](opt: Optional[A]): Unit = opt match
       case Optional.Just(a) => log(a)
       case _ => ()
   }
 
-  given Traversable2[Sequence] with {
+  given Traversable[Sequence] with {
     def logAll[A](seq: Sequence[A]): Unit = seq match
       case Cons(h, t) => log(h); logAll(t)
       case _ => ()
   }
 
-  def logAll[B, A[_]: Traversable2](t: A[B]): Unit = summon[Traversable2[A]].logAll(t)
+  def logAll[B, A[_]: Traversable](t: A[B]): Unit = summon[Traversable[A]].logAll(t)
 
 @main def main(): Unit = {
   import Ex5Traversable.{*, given}

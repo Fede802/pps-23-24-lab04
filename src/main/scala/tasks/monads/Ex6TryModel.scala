@@ -28,7 +28,7 @@ object Ex6TryModel:
   catch
     case e: Throwable => failure(e)
 
-  extension [A](m: Try[A]) 
+  extension [A](m: Try[A])
     def getOrElse[B >: A](other: B): B = m match
       case TryImpl.Success(value) => value
       case TryImpl.Failure(_) => other
