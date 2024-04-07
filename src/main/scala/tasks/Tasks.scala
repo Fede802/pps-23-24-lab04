@@ -1,8 +1,9 @@
 package tasks
 
 import u03.Sequences.Sequence
-import u03.Sequences.Sequence.Cons
 import u04.monads.Monads.Monad
+import u03.Optionals.Optional
+
 
 object Ex1:
 
@@ -41,8 +42,7 @@ object Ex1:
           else s"${re} ${sign(im)} ${Math.abs(im)}i"
       private def sign(d: Double): String = if (d < 0) "-" else "+"
 
-import u03.Optionals.*
-import u03.Sequences.*
+
 object Ex2:
   trait SchoolModule:
     type Course
@@ -184,7 +184,7 @@ object Ex5:
 
   given Traversable[Sequence] with {
     def logAll[A](seq: Sequence[A]): Unit = seq match
-      case Cons(h, t) => log(h); logAll(t)
+      case Sequence.Cons(h, t) => log(h); logAll(t)
       case _ => ()
   }
 

@@ -2,11 +2,13 @@ package tasks
 
 import org.junit.*
 import org.junit.Assert.*
-import tasks.Ex1.{BasicComplexADT, ComplexADT}
-import tasks.typeclasses.Ex5Traversable.logAll
+import u03.Sequences.Sequence
+import u03.Optionals.Optional
+
 
 object TasksTest {
 
+  import tasks.Ex1.{BasicComplexADT, ComplexADT}
   class Ex1Test:
     // Choice of implementation to test
     val complexADT: ComplexADT = BasicComplexADT
@@ -39,9 +41,6 @@ object TasksTest {
       assertEquals("-5.0i", complex(0, -5.0).asString())
 
   import tasks.Ex2.{SchoolModule, SchoolModuleImpl}
-  import u03.Optionals.*
-  import u03.Sequences.Sequence
-
   class Ex2Test:
 
     val schoolADT: SchoolModule = SchoolModuleImpl
@@ -189,8 +188,9 @@ object TasksTest {
         empty[Int].push(10).pop()
       )
 
+  import tasks.Ex4.*
   class Ex4Test:
-    import tasks.Ex4.*
+
     @Test def testSumIntSequence(): Unit =
       val si =
         Sequence.Cons(10, Sequence.Cons(20, Sequence.Cons(30, Sequence.Nil())))
@@ -210,6 +210,7 @@ object TasksTest {
       )
       assertEquals("102030", sumAll(si))
 
+  import tasks.Ex5.logAll
   class Ex5Test:
 
     @Test def testLogAllSequence(): Unit =
