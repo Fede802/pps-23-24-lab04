@@ -18,7 +18,6 @@ object Ex1:
 
   object BasicComplexADT extends ComplexADT:
 
-    // Change assignment below: should probably define a case class and use it?
     private case class ComplexNumber(re: Double, im: Double)
     opaque type Complex = ComplexNumber
     override def complex(re: Double, im: Double): Complex =
@@ -129,7 +128,7 @@ object Ex3:
 
   trait StackADT:
     type Stack[A]
-    def empty[A]: Stack[A] // factory
+    def empty[A]: Stack[A]
     extension [A](stack: Stack[A])
       def push(a: A): Stack[A]
       def pop(): Optional[(A, Stack[A])]

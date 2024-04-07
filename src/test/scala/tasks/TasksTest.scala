@@ -9,11 +9,9 @@ object TasksTest {
 
   import tasks.Ex1.{BasicComplexADT, ComplexADT}
   class Ex1Test:
-    // Choice of implementation to test
-    val complexADT: ComplexADT = BasicComplexADT
 
+    val complexADT: ComplexADT = BasicComplexADT
     import complexADT.*
-    // From now, everything is independent of specific implementation of Complex
 
     @Test def testReal(): Unit =
       assertEquals(10, complex(10, 20).re(), 0)
@@ -165,7 +163,6 @@ object TasksTest {
   class Ex3Test:
 
     val stack: StackADT = StackImpl
-
     import stack.*
 
     @Test def testEmpty(): Unit =
