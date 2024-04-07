@@ -1,7 +1,8 @@
-package u04.monads
+package tasks.mvc
 
-import Monads.*, Monad.*, States.*, State.*
 import u03.extensionmethods.Streams.*
+import u04.monads.Monads.Monad.seqN
+import u04.monads.States.State
 
 trait WindowState:
   type Window
@@ -16,7 +17,7 @@ trait WindowState:
   def eventStream(): State[Window, Stream[String]]
 
 object WindowStateImpl extends WindowState:
-  import SwingFunctionalFacade.*
+  import tasks.mvc.SwingFunctionalFacade.*
   
   type Window = Frame
   
@@ -37,15 +38,19 @@ object WindowStateImpl extends WindowState:
     State(w => (w, w.textFromField(name)))
   def show(): State[Window, Unit] =
     State(w => (w.show, {}))
+  def resetWindow(): State[Window, Unit] =
+    State(w => (w.resetWindow(),{}))
+  def disable(name: String): State[Window, Unit] =
+    State(w => (w.disable(name),{}))
   def exec(cmd: =>Unit): State[Window, Unit] =
     State(w => (w, cmd))  
   def eventStream(): State[Window, Stream[String]] =
     State(w => (w, Stream.generate(() => w.events().get)))
   
 @main def windowStateExample =
-  import u04.*
   import WindowStateImpl.*
   import u03.extensionmethods.Streams.*
+  import u04.*
 
   val windowCreation = for 
     _ <- setSize(300, 300)

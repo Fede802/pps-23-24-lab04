@@ -1,6 +1,8 @@
-package u04.monads
+package tasks.mvc
 
-import States.*
+
+import u04.monads.Monads.Monad.seq
+import u04.monads.States.State
 
 trait CounterState:
   type Counter
@@ -25,7 +27,7 @@ object CounterStateImpl extends CounterState:
   def nop(): State[Counter, Unit] = State(i => (i, ()));
 
 @main def tryCounterState =
-  import Monads.*, Monad.*, States.{*, given}, State.*
+  import State.*
   val counterState: CounterState = CounterStateImpl
   import counterState.*  // or directly, import CounterStateImpl.*
 

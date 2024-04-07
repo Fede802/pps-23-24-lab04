@@ -1,21 +1,26 @@
 package u04.monads
 
-@main def runMVC =
-  import Monads.*, Monad.*, States.*, State.*, CounterStateImpl.*, WindowStateImpl.*
+@main def runCounterMVC =
+  import tasks.mvc.CounterStateImpl.*
+  import Monads.*
+  import Monad.*
+  import States.*
+  import State.*
+  import tasks.mvc.WindowStateImpl.*
   import u03.extensionmethods.Streams.*
-  
-  def mv[SM, SV, AM, AV](m1: State[SM,AM], f: AM => State[SV,AV]): State[(SM,SV), AV] = 
-    State: (sm, sv) => 
+
+  def mv[SM, SV, AM, AV](m1: State[SM,AM], f: AM => State[SV,AV]): State[(SM,SV), AV] =
+    State: (sm, sv) =>
       val (sm2, am) = m1.run(sm)
       val (sv2, av) = f(am).run(sv)
       ((sm2, sv2), av)
 
-  def windowCreation(str: String): State[Window, Stream[String]] = for 
+  def windowCreation(str: String): State[Window, Stream[String]] = for
     _ <- setSize(300, 300)
     _ <- addButton(text = "inc", name = "IncButton")
     _ <- addButton(text = "dec", name = "DecButton")
     _ <- addButton(text = "reset", name = "ResetButton")
-    _ <- addTextField(text = "", name = "CounterField")
+    _ <- addTextField(text = "10", name = "CounterField")
     _ <- addButton(text = "set", name = "SetButton")
     _ <- addButton(text = "quit", name = "QuitButton")
     _ <- addLabel(text = str, name = "Label1")
@@ -32,10 +37,9 @@ package u04.monads
         case "SetButton" =>
           for
             text <- mv(nop(), i => textFromField("CounterField"))
-            _ <-
-              if text.toIntOption.isDefined
-                then mv(seq(set(text.toInt), get()), i => toLabel(i.toString, "Label1"))
-                else mv(get(), i => toLabel(i.toString, "Label1"))
+            _ <- if text.toIntOption.isDefined
+                    then mv(seq(set(text.toInt), get()), i => toLabel(i.toString, "Label1"))
+                    else mv(get(), i => toLabel(i.toString, "Label1"))
           yield ()
         case "QuitButton" => mv(nop(), _ => exec(sys.exit()))))
   yield ()
